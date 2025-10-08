@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEO & Worksuite EOR Integration - Phase 1 & 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .slide-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            position: relative;
+        }
+        
+        .neo-logo {
+            width: 80px;
+            height: 80px;
+            background: #000;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            letter-spacing: 2px;
+        }
+        
+        h1 {
+            color: #2d3748;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        /* Navigation Tabs */
+        .navigation-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0;
+        }
+        
+        .nav-tab {
+            padding: 12px 30px;
+            background: #f8f9fa;
+            border: 2px solid #e2e8f0;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: #718096;
+            transition: all 0.3s ease;
+            position: relative;
+            bottom: -2px;
+        }
+        
+        .nav-tab:hover {
+            background: #f0f4ff;
+        }
+        
+        .nav-tab.active {
+            background: white;
+            color: #667eea;
+            border-color: #667eea;
+            border-bottom: 2px solid white;
+        }
+        
+        .phase-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 0 5px;
+        }
+        
+        .phase2-badge {
+            background: #48bb78;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .actor-badge {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .customer-badge {
+            background: #e74c3c;
+        }
+        
+        .employee-badge {
+            background: #3498db;
+        }
+        
+        .worksuite-badge {
+            background: #f39c12;
+        }
+        
+        .automated-badge {
+            background: #10b981;
+        }
+        
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #718096;
+            font-size: 12px;
+        }
+        
+        .customer-stat {
+            color: #e74c3c;
+        }
+        
+        .employee-stat {
+            color: #3498db;
+        }
+        
+        .worksuite-stat {
+            color: #f39c12;
+        }
+        
+        .process-flow {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .phase-container {
+            border: 3px solid;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .phase1-container {
+            border-color: #667eea;
+            background: linear-gradient(to bottom, rgba(102, 126, 234, 0.02), transparent);
+        }
+        
+        .phase2-container {
+            border-color: #48bb78;
+            background: linear-gradient(to bottom, rgba(72, 187, 120, 0.02), transparent);
+            display: none;
+        }
+        
+        .implementation-container {
+            border-color: #f39c12;
+            background: linear-gradient(to bottom, rgba(243, 156, 18, 0.02), transparent);
+            display: none;
+        }
+        
+        .phase-indicator {
+            position: absolute;
+            top: -15px;
+            left: 30px;
+            background: white;
+            padding: 5px 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .phase1-indicator {
+            color: #667eea;
+        }
+        
+        .phase2-indicator {
+            color: #48bb78;
+        }
+        
+        .implementation-indicator {
+            color: #f39c12;
+        }
+        
+        .phase-section {
+            margin-bottom: 40px;
+        }
+        
+        .phase-title {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: inline-block;
+            position: relative;
+        }
+        
+        .phase2-title-style {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+        
+        .implementation-title-style {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+        
+        .process-step {
+            display: flex;
+            align-items: stretch;
+            margin-bottom: 15px;
+            position: relative;
+            min-height: 50px;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+            margin-right: 15px;
+            margin-top: 7px;
+        }
+        
+        .phase2-step-number {
+            background: #48bb78;
+        }
+        
+        .step-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 12px 15px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+        
+        .step-content:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .neo-step {
+            border-color: #667eea;
+            background: linear-gradient(to right, rgba(102, 126, 234, 0.05), transparent);
+        }
+        
+        .worksuite-step {
+            border-color: #48bb78;
+            background: linear-gradient(to right, rgba(72, 187, 120, 0.05), transparent);
+        }
+        
+        .email-step {
+            border-color: #9f7aea;
+            background: linear-gradient(to right, rgba(159, 122, 234, 0.05), transparent);
+        }
+        
+        .step-text {
+            flex: 1;
+            color: #2d3748;
+            font-size: 14px;
+            margin-right: 15px;
+        }
+        
+        .step-platform {
+            background: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 10px;
+            color: #718096;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .platform-neo {
+            color: #667eea;
+            border-color: #667eea;
+        }
+        
+        .platform-worksuite {
+            color: #48bb78;
+            border-color: #48bb78;
+        }
+        
+        .platform-email {
+            color: #9f7aea;
+            border-color: #9f7aea;
+        }
+        
+        .connecting-line {
+            position: absolute;
+            left: 17px;
+            top: 50px;
+            width: 2px;
+            height: calc(100% - 50px);
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+            opacity: 0.3;
+        }
+        
+        .phase2-connecting-line {
+            background: linear-gradient(to bottom, #48bb78, #38a169);
+        }
+        
+        .ongoing-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .ongoing-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .timeline-note {
+            background: #fef5e7;
+            border: 2px solid #f39c12;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .timeline-text {
+            font-size: 16px;
+            color: #e67e22;
+            font-weight: 600;
+        }
+        
+        .requirements-section {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .requirements-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .requirements-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .requirement-item {
+            background: white;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #f39c12;
+            display: flex;
+            align-items: center;
+        }
+        
+        .requirement-icon {
+            font-size: 20px;
+            margin-right: 15px;
+        }
+        
+        .requirement-text {
+            flex: 1;
+            color: #4a5568;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="header">
+            <div class="neo-logo">NEO</div>
+            <h1>EOR Integration Process Flow</h1>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="navigation-tabs">
+            <div class="nav-tab active" onclick="showSection('phase1')">Phase 1 - Current (USA & Canada)</div>
+            <div class="nav-tab" onclick="showSection('phase1global')">Phase 1 - Current (Global)</div>
+            <div class="nav-tab" onclick="showSection('phase2')">Phase 2 (US & Canada)- Q1 2026</div>
+            <div class="nav-tab" onclick="showSection('implementation')">Implementation Steps</div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <span class="actor-badge customer-badge">CUSTOMER</span>
+                <span>= Customer performs action</span>
+            </div>
+            <div class="legend-item">
+                <span class="actor-badge employee-badge">EMPLOYEE</span>
+                <span>= Employee performs action</span>
+            </div>
+            <div class="legend-item">
+                <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                <span>= Worksuite team performs action</span>
+            </div>
+            <div class="legend-item">
+                <span class="actor-badge automated-badge">AUTOMATED</span>
+                <span>= System automated</span>
+            </div>
+        </div>
+        
+        <!-- PHASE 1 -->
+        <div class="phase-container phase1-container" id="phase1-section">
+            <div class="phase-indicator phase1-indicator">PHASE 1 - CURRENT STATE (USA & CANADA)</div>
+            
+            <div class="stat-row">
+                <div class="stat-card">
+                    <div class="stat-number customer-stat">13</div>
+                    <div class="stat-label">Customer Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number employee-stat">5</div>
+                    <div class="stat-label">Employee Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number worksuite-stat">9</div>
+                    <div class="stat-label">Worksuite Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #667eea;">27</div>
+                    <div class="stat-label">Total Steps</div>
+                </div>
+            </div>
+            
+            <div class="process-flow">
+                <div class="phase-section">
+                    <div class="phase-title">
+                        📝 CONTRACT SETUP
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="connecting-line" style="height: 440px;"></div>
+                        <div class="step-number">1</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer creates EOR Contract Request (US or Canada)</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer picks USA as working country</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer adds job title & uses generated job description</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer adds hourly rate & other contract details</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer confirms benefits package</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">6</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer reviews quote & signs EOR MSA with Worksuite (first engagement only)</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">7</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer reviews Worksuite employment template</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">8</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer accepts SOW for this EOR service</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">9</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer views deposit details</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">10</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite sends deposit invoice to customer</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phase-section">
+                    <div class="phase-title">👤 EMPLOYEE ONBOARDING</div>
+                    
+                    <div class="process-step">
+                        <div class="connecting-line" style="height: 285px;"></div>
+                        <div class="step-number">11</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Worksuite confirms deposit has been received in NEO Admin</span>
+                            <span class="step-platform platform-neo">NEO ADMIN</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">12</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">NEO sends employee onboarding link (ON HOLD for US/Canada until Phase 2)</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">ON HOLD</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">13</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite adds employee in GUSTO system and invites them to onboard to GUSTO</span>
+                            <span class="step-platform platform-worksuite">GUSTO</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">14</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Employee completes I-9, state forms, adds bank details in GUSTO</span>
+                            <span class="step-platform platform-worksuite">GUSTO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">15</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite sends employment agreement manually</span>
+                            <span class="step-platform platform-worksuite">EMAIL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">16</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Employee signs employment agreement</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phase-section">
+                    <div class="phase-title">💰 PAYROLL SETUP & PROCESSING</div>
+                    
+                    <div class="process-step">
+                        <div class="connecting-line" style="height: 390px;"></div>
+                        <div class="step-number">17</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite invoices client for 1st month upfront</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">18</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Worksuite confirms employment agreement has been signed in NEO Admin</span>
+                            <span class="step-platform platform-neo">NEO ADMIN</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">19</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee added to payroll cycles for customer to view</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">20</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Employee enters timesheets to Gusto</span>
+                            <span class="step-platform platform-worksuite">GUSTO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">21</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite sends timesheets to customer for approval</span>
+                            <span class="step-platform platform-worksuite">EMAIL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">22</div>
+                        <div class="step-content email-step">
+                            <span class="step-text">Customer approves timesheets</span>
+                            <span class="step-platform platform-email">EMAIL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">23</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Worksuite uploads weekly payroll data via NEO Admin</span>
+                            <span class="step-platform platform-neo">NEO ADMIN</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">24</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer views upcoming payroll details</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">25</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves payroll</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">26</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Customer pays monthly invoice</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">27</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Gusto pulls funds from Worksuite, processes weekly salary payment & uploads payslip</span>
+                            <span class="step-platform platform-worksuite">GUSTO</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ongoing-section">
+                <div class="ongoing-title">🔄 ONGOING OPERATIONS</div>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee enters timesheets in Gusto </span>
+                            <span class="step-platform platform-worksuite">GUSTO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves timesheets via EMAIL</span>
+                            <span class="step-platform platform-neo">EMAIL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer submits and approves contract change requests via EMAIL</span>
+                            <span class="step-platform platform-neo">EMAIL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee submits time off requests in Gusto</span>
+                            <span class="step-platform platform-worksuite">GUSTO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves time off via EMAIL</span>
+                            <span class="step-platform platform-neo">EMAIL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee submits expense requests in a 3rd party tool or EMAIL</span>
+                            <span class="step-platform platform-neo">EXTERNAL</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves expense requests via EMAIL</span>
+                            <span class="step-platform platform-neo">EXTERNAL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite bills customer monthly</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite downloads payroll data from Gusto and uploads to NEO</span>
+                            <span class="step-platform platform-worksuite">MANUAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+            
+        <!-- PHASE 1 GLOBAL -->
+        <div class="phase-container phase1-container" id="phase1global-section" style="display: none;">
+            <div class="phase-indicator phase1-indicator">PHASE 1 - CURRENT STATE (GLOBAL)</div>
+            
+            <div class="stat-row">
+                <div class="stat-card">
+                    <div class="stat-number customer-stat">11</div>
+                    <div class="stat-label">Customer Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number employee-stat">3</div>
+                    <div class="stat-label">Employee Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number worksuite-stat">2</div>
+                    <div class="stat-label">Worksuite Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #10b981;">9</div>
+                    <div class="stat-label">Automated Steps</div>
+                </div>
+            </div>
+            
+            <div class="process-flow">
+                <div class="phase-section">
+                    <div class="phase-title">
+                        📝 CONTRACT SETUP
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="connecting-line" style="height: 440px;"></div>
+                        <div class="step-number">1</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer creates EOR Contract Request (Global)</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer picks i.e Brazil as working country</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer adds job title & uses generated job description</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer adds hourly rate & other contract details</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer confirms benefits package</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">6</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer reviews quote & signs EOR MSA with Worksuite (first engagement only)</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">7</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer reviews Worksuite employment template</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">8</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer accepts SOW for this EOR service</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">9</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer views deposit details</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">10</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite sends deposit invoice to customer</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phase-section">
+                    <div class="phase-title">👤 EMPLOYEE ONBOARDING</div>
+                    
+                    <div class="process-step">
+                        <div class="connecting-line" style="height: 285px;"></div>
+                        <div class="step-number">11</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">NEO confirms that deposit has been received</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">12</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">NEO sends employee onboarding link</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">13</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee completes the onboarding and confirms Rights to Work</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">14</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">NEO partner sends employee agreement for signing</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">15</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee signs employment agreement with NEO Partner</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">16</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">NEO confirms Employee has signed the agreement, and contract is live</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phase-section">
+                    <div class="phase-title">💰 PAYROLL SETUP & PROCESSING</div>
+                    
+                    <div class="process-step">
+                        <div class="connecting-line" style="height: 440px;"></div>
+                        <div class="step-number">17</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee added to payroll section for customer to view</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">18</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">NEO updates Payroll before the Payroll Finalize Date and notifies customer Payroll is ready for review</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">19</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves payroll</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">20</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">NEO invoices Worksuite for 1st month</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">21</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite invoices Customer for 1st month</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">22</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite pays NEO Invoice</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">23</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">NEO Partner processes Employee Salary</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">24</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee receives the Payslip</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">25</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">New cycle begins</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ongoing-section">
+                <div class="ongoing-title">🔄 ONGOING OPERATIONS</div>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">If timesheets are reaquired, Employee enters time in a 3rd party tool </span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves timesheets via EMAIL</span>
+                            <span class="step-platform platform-neo">EMAIL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer submits and approves contract change requests via EMAIL</span>
+                            <span class="step-platform platform-neo">EMAIL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee submits time off requests in a 3rd party tool</span>
+                            <span class="step-platform platform-neo">EXTERNAL</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves time off via EMAIL</span>
+                            <span class="step-platform platform-neo">EMAIL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee submits expense requests in a 3rd party tool or EMAIL</span>
+                            <span class="step-platform platform-neo">EMAIL</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves expense requests via EMAIL</span>
+                            <span class="step-platform platform-neo">EMAIL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">NEO processes payroll</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                     <div class="process-step">
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite bills customer monthly</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <!-- PHASE 2 -->
+        <div class="phase-container phase1-container" id="phase1global-section" style="display: none;">
+            <div class="phase-indicator phase1-indicator">PHASE 1 - CURRENT STATE (GLOBAL)</div>
+            
+            <div class="stat-row">
+                <div class="stat-card">
+                    <div class="stat-number customer-stat">13</div>
+                    <div class="stat-label">Customer Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number employee-stat">5</div>
+                    <div class="stat-label">Employee Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number worksuite-stat">9</div>
+                    <div class="stat-label">Worksuite Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #667eea;">27</div>
+                    <div class="stat-label">Total Steps</div>
+                </div>
+            </div>
+            
+            <div class="process-flow">
+                <div class="phase-section">
+                    <div class="phase-title">
+                        📝 CONTRACT SETUP
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="connecting-line" style="height: 440px;"></div>
+                        <div class="step-number">1</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer creates EOR Contract Request (Global)</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer picks i.e Brazil as working country</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer adds job title & uses generated job description</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer adds hourly rate & other contract details</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer confirms benefits package</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">6</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer reviews quote & signs EOR MSA with Worksuite (first engagement only)</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">7</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer reviews Worksuite employment template</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">8</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer accepts SOW for this EOR service</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">9</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer views deposit details</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">10</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite sends deposit invoice to customer</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phase-section">
+                    <div class="phase-title">👤 EMPLOYEE ONBOARDING</div>
+                    
+                    <div class="process-step">
+                        <div class="connecting-line" style="height: 285px;"></div>
+                        <div class="step-number">11</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Worksuite confirms deposit has been received in NEO Admin</span>
+                            <span class="step-platform platform-neo">NEO ADMIN</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">12</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">NEO sends employee onboarding link (ON HOLD for US/Canada until Phase 2)</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">ON HOLD</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">13</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite adds employee in GUSTO system and invites them to onboard to GUSTO</span>
+                            <span class="step-platform platform-worksuite">GUSTO</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">14</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Employee completes I-9, state forms, adds bank details in GUSTO</span>
+                            <span class="step-platform platform-worksuite">GUSTO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">15</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite sends employment agreement manually</span>
+                            <span class="step-platform platform-worksuite">EMAIL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">16</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Employee signs employment agreement</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phase-section">
+                    <div class="phase-title">💰 PAYROLL SETUP & PROCESSING</div>
+                    
+                    <div class="process-step">
+                        <div class="connecting-line" style="height: 390px;"></div>
+                        <div class="step-number">17</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite invoices client for 1st month upfront</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">18</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Worksuite confirms employment agreement has been signed in NEO Admin</span>
+                            <span class="step-platform platform-neo">NEO ADMIN</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">19</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee added to payroll cycles for customer to view</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">20</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Employee enters timesheets to Gusto</span>
+                            <span class="step-platform platform-worksuite">GUSTO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">21</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite sends timesheets to customer for approval</span>
+                            <span class="step-platform platform-worksuite">EMAIL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">22</div>
+                        <div class="step-content email-step">
+                            <span class="step-text">Customer approves timesheets</span>
+                            <span class="step-platform platform-email">EMAIL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">23</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Worksuite uploads weekly payroll data via NEO Admin</span>
+                            <span class="step-platform platform-neo">NEO ADMIN</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">24</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer views upcoming payroll details</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">25</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves payroll</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">26</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Customer pays monthly invoice</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">27</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Gusto pulls funds from Worksuite, processes weekly salary payment & uploads payslip</span>
+                            <span class="step-platform platform-worksuite">GUSTO</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ongoing-section">
+                <div class="ongoing-title">🔄 MANUAL OPERATIONS</div>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-content email-step">
+                            <span class="step-text">Customer submits contract change requests (e.g., hourly rate increase)</span>
+                            <span class="step-platform platform-email">EMAIL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Employee requests time off</span>
+                            <span class="step-platform platform-worksuite">GUSTO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content email-step">
+                            <span class="step-text">Customer approves time off request</span>
+                            <span class="step-platform platform-email">EMAIL</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite bills customer monthly</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite downloads payroll data from Gusto and uploads to NEO</span>
+                            <span class="step-platform platform-worksuite">MANUAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PHASE 2 -->
+        <div class="phase-container phase2-container" id="phase2-section">
+            <div class="phase-indicator phase2-indicator">PHASE 2 - EARLY Q1 2026</div>
+            
+            <div style="background: #d4edda; border: 2px solid #48bb78; border-radius: 10px; padding: 20px; margin-bottom: 25px;">
+                <div style="font-size: 18px; font-weight: 600; color: #155724; margin-bottom: 15px;">✨ Key Improvements in Phase 2</div>
+                <div style="padding: 8px 0; color: #155724; font-size: 14px;">• <strong>Full Employee US and Canada Tax Onboarding in NEO:</strong> Complete I-9 and state/provincial form processing directly in NEO platform</div>
+                <div style="padding: 8px 0; color: #155724; font-size: 14px;">• <strong>Built in US and Canada Payroll Solution:</strong> NEO payroll partner handles all backend processing (replacing Gusto)</div>
+                <div style="padding: 8px 0; color: #155724; font-size: 14px;">• <strong>Employee payments handled by NEO:</strong> Direct salary disbursements through NEO platform</div>
+                <div style="padding: 8px 0; color: #155724; font-size: 14px;">• <strong>Integrated Timesheets:</strong> Employees enter time directly in NEO system</div>
+                <div style="padding: 8px 0; color: #155724; font-size: 14px;">• <strong>In-System Request Management:</strong> All change requests and approvals handled within NEO</div>
+                <div style="padding: 8px 0; color: #155724; font-size: 14px;">• <strong>Elimination of Email Dependencies:</strong> All processes move from email to automated workflows</div>
+            </div>
+            
+            <div class="stat-row">
+                <div class="stat-card">
+                    <div class="stat-number customer-stat">12</div>
+                    <div class="stat-label">Customer Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number employee-stat">4</div>
+                    <div class="stat-label">Employee Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number worksuite-stat">3</div>
+                    <div class="stat-label">Worksuite Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #10b981;">8</div>
+                    <div class="stat-label">Automated Steps</div>
+                </div>
+            </div>
+            
+            <div class="process-flow">
+                <div class="phase-section">
+                    <div class="phase-title phase2-title-style">📝 CONTRACT SETUP</div>
+                    
+                    <div class="process-step">
+                        <div class="connecting-line phase2-connecting-line" style="height: 440px;"></div>
+                        <div class="step-number phase2-step-number">1</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer creates EOR Contract Request (US or Canada)</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">2</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer picks USA as working country</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">3</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer adds job title & uses generated job description</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">4</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer adds hourly rate & other contract details</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">5</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer confirms benefits package</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">6</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer reviews quote & signs EOR MSA with NEO (first engagement only)</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">7</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer reviews NEO employment template</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">8</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer accepts SOW for this EOR service</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">9</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer views deposit details</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">10</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite sends deposit invoice (can be triggered via NEO API)</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phase-section">
+                    <div class="phase-title phase2-title-style">👤 EMPLOYEE ONBOARDING</div>
+                    
+                    <div class="process-step">
+                        <div class="connecting-line phase2-connecting-line" style="height: 285px;"></div>
+                        <div class="step-number phase2-step-number">11</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Worksuite confirms deposit has been received (manual via Worksuite NEO Admin)</span>
+                            <span class="step-platform platform-neo">NEO ADMIN</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">12</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee onboarding link sent automatically</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">13</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee added to NEO system automatically</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">14</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee completes I-9, state forms, adds bank details in NEO</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">15</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employment agreement sent via NEO automatically</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">16</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee signs employment agreement in NEO</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phase-section">
+                    <div class="phase-title phase2-title-style">💰 PAYROLL SETUP & PROCESSING</div>
+                    
+                    <div class="process-step">
+                        <div class="connecting-line phase2-connecting-line" style="height: 520px;"></div>
+                        <div class="step-number phase2-step-number">17</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite invoices client for the month upfront</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">18</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employment agreement confirmation happens automatically</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">19</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee automatically added to payroll cycles for customer to view</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">20</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee enters weekly timesheets in NEO</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">21</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves timesheets in NEO</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">22</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Payroll data calculated by NEO Payroll Partner and updated in the system seamlessly</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">23</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer views upcoming payroll details</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">24</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves payroll in NEO</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">26</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite invoices the customer for the payroll</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+
+                     <div class="process-step">
+                        <div class="step-number phase2-step-number">26</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">NEO Sends Worksuite Funding Request</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">NEO</span>
+                        </div>
+                    </div>
+
+                     <div class="process-step">
+                        <div class="step-number phase2-step-number">27</div>
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite sends funds to their NEO Funding Account</span>
+                            <span class="step-platform platform-neo">EXTERNAL</span>
+                            <span class="actor-badge automated-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number phase2-step-number">27</div>
+                        <div class="step-content neo-step">
+                            <span class="step-text">NEO distributes salary payments, files taxes on behalf of customer, and generates payslips</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                </div>
+                
+               
+            
+            <div class="timeline-note">
+                <div class="timeline-text">📅 Target Release: Early Q1 2026</div>
+            </div>
+
+
+            <div class="ongoing-section">
+                <div class="ongoing-title">🔄 ONGOING OPERATIONS</div>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">If timesheets are reaquired, Employee enters timesheets in NEO</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves timesheets in NEO</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer submits and approves contract change requests in NEO</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee submits time off requests in NEO</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves time off in NEO</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Employee submits expense requests via NEO</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge employee-badge">EMPLOYEE</span>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">Customer approves expense requests via NEO</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge customer-badge">CUSTOMER</span>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-content neo-step">
+                            <span class="step-text">NEO processes payroll</span>
+                            <span class="step-platform platform-neo">NEO</span>
+                            <span class="actor-badge automated-badge">AUTOMATED</span>
+                        </div>
+                    </div>
+                     <div class="process-step">
+                        <div class="step-content worksuite-step">
+                            <span class="step-text">Worksuite bills customer monthly</span>
+                            <span class="step-platform platform-worksuite">EXTERNAL</span>
+                            <span class="actor-badge worksuite-badge">WORKSUITE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        
+        <!-- IMPLEMENTATION STEPS -->
+        <div class="phase-container implementation-container" id="implementation-section">
+            <div class="phase-indicator implementation-indicator">IMPLEMENTATION STEPS</div>
+            
+            <div class="requirements-section">
+                <div class="requirements-title">📋 Worksuite Requirements & Deliverables</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">
+                        <span class="requirement-icon">📄</span>
+                        <span class="requirement-text">Employee Agreement Template for USA and Canada</span>
+                    </li>
+                    <li class="requirement-item">
+                        <span class="requirement-icon">📑</span>
+                        <span class="requirement-text">MSA (Master Service Agreement) Template</span>
+                    </li>
+                    <li class="requirement-item">
+                        <span class="requirement-icon">📝</span>
+                        <span class="requirement-text">SOW (Statement of Work) Template</span>
+                    </li>
+                    <li class="requirement-item">
+                        <span class="requirement-icon">💳</span>
+                        <span class="requirement-text">Bank Account Details for Receiving Deposits</span>
+                    </li>
+                    <li class="requirement-item">
+                        <span class="requirement-icon">🏢</span>
+                        <span class="requirement-text">Entity Details of EOR Entities for US and Canada</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="timeline-note" style="margin-top: 30px;">
+                <div class="timeline-text">🎯 These deliverables are required for Phase 1 implementation</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showSection(section) {
+            // Hide all sections
+            document.getElementById('phase1-section').style.display = 'none';
+            document.getElementById('phase1global-section').style.display = 'none';
+            document.getElementById('phase2-section').style.display = 'none';
+            document.getElementById('implementation-section').style.display = 'none';
+            
+            // Remove active class from all tabs
+            const tabs = document.getElementsByClassName('nav-tab');
+            for (let tab of tabs) {
+                tab.classList.remove('active');
+            }
+            
+            // Show selected section and activate tab
+            if (section === 'phase1') {
+                document.getElementById('phase1-section').style.display = 'block';
+                tabs[0].classList.add('active');
+            } else if (section === 'phase1global') {
+                document.getElementById('phase1global-section').style.display = 'block';
+                tabs[1].classList.add('active');
+            } else if (section === 'phase2') {
+                document.getElementById('phase2-section').style.display = 'block';
+                tabs[2].classList.add('active');
+            } else if (section === 'implementation') {
+                document.getElementById('implementation-section').style.display = 'block';
+                tabs[3].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
